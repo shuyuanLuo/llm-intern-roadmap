@@ -36,53 +36,115 @@ llm-intern-roadmap/
   README.md
   .gitignore
   requirements-day0.txt
+  environment.yml
 ```
 
 ## Day 0 完成内容
 
 - 创建项目结构
-- 创建 Python 虚拟环境说明
+- 创建 Conda + Python 3.11 环境说明
 - 创建 requirements-day0.txt
+- 创建 environment.yml
 - 创建环境验证脚本
 - 记录本机环境
 - 初始化 Git
 
-## Python 虚拟环境
+## Conda 环境
 
-Windows PowerShell:
+本项目统一使用 Conda 环境 `llm-intern`，不使用系统 Python 3.9，也不使用 `.venv`。
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\activate
-python -m pip install --upgrade pip
-```
+环境要求：
 
-macOS / Linux:
+- 环境名：`llm-intern`
+- Python 版本：3.11.x
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-```
-
-安装 Day 0 / Day 1 最小依赖：
+创建环境：
 
 ```bash
+conda create -n llm-intern python=3.11 -y
+```
+
+激活环境：
+
+```bash
+conda activate llm-intern
+```
+
+检查 Python：
+
+```bash
+python --version
+```
+
+期望输出：
+
+```text
+Python 3.11.x
+```
+
+如果 `llm-intern` 环境已经存在但不是 Python 3.11，可以尝试：
+
+```bash
+conda install -n llm-intern python=3.11 -y
+```
+
+如果升级失败，请手动确认是否删除并重建环境。
+
+也可以根据 `environment.yml` 创建环境：
+
+```bash
+conda env create -f environment.yml
+```
+
+## 安装 Day 0 依赖
+
+在已激活 `llm-intern` 后执行：
+
+```bash
+python -m pip install --upgrade pip
 pip install -r requirements-day0.txt
 ```
 
-如果你使用 NVIDIA GPU，但不确定 CUDA 与 PyTorch 版本如何匹配，不要手动猜安装命令。请到 PyTorch 官方 Start Locally 页面选择对应系统、pip/conda、Python 和 CUDA 版本后，再使用官方生成的安装命令。
-
-## 如何运行环境检查
+或者不依赖当前 shell 激活状态，直接使用：
 
 ```bash
+conda run -n llm-intern python -m pip install --upgrade pip
+conda run -n llm-intern python -m pip install -r requirements-day0.txt
+```
+
+## Jupyter Kernel
+
+在 `llm-intern` 环境中注册 Jupyter kernel：
+
+```bash
+python -m ipykernel install --user --name llm-intern --display-name "Python (llm-intern)"
+```
+
+以后打开 Jupyter Notebook / JupyterLab 时，选择 kernel：
+
+```text
+Python (llm-intern)
+```
+
+## PyTorch GPU 安装说明
+
+如果 CPU 版 PyTorch 能正常运行，Day 1 可以继续。
+
+如果需要 NVIDIA GPU 版 PyTorch，不要手动猜 CUDA 命令，请去 PyTorch 官方 Start Locally 页面选择适合当前系统、包管理器、Python 版本和 CUDA 版本的安装命令。
+
+## 环境检查
+
+先激活 Conda 环境：
+
+```bash
+conda activate llm-intern
 python 00_setup/check_env.py
 ```
 
-如果系统默认命令是 `python3`：
+或者不依赖当前 shell 激活状态：
 
 ```bash
-python3 00_setup/check_env.py
+conda run -n llm-intern python 00_setup/check_env.py
 ```
 
 ## 后续 Day 1 预告
@@ -97,5 +159,5 @@ python3 00_setup/check_env.py
 
 - [PyTorch Start Locally](https://pytorch.org/get-started/locally/)
 - [PyTorch Learn the Basics](https://pytorch.org/tutorials/beginner/basics/intro.html)
-- [Python venv 官方文档](https://docs.python.org/3/library/venv.html)
+- [Conda 用户指南](https://docs.conda.io/projects/conda/en/latest/user-guide/index.html)
 - [Git 官方文档](https://git-scm.com/doc)

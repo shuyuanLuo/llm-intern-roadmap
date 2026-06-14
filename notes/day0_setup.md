@@ -111,7 +111,7 @@ llm-intern-roadmap/
 ## 6. Day 0 验收清单
 
 - [x] 项目目录已创建
-- [x] 虚拟环境说明已写入 README
+- [x] Conda 环境说明已写入 README
 - [x] requirements-day0.txt 已创建
 - [x] check_env.py 已创建
 - [x] check_env.py 已运行
@@ -119,3 +119,70 @@ llm-intern-roadmap/
 - [x] .gitignore 已创建
 - [x] Git 仓库已初始化
 - [x] Day 0 commit 已完成
+
+## Conda Python 3.11 环境改造记录
+
+本节记录后续增量改造结果。原 `.venv` 记录仅作为历史信息保留；从本节开始，本项目统一使用 Conda 环境。
+
+- 我的系统 Python 是 3.9
+- 本项目不使用系统 Python 3.9
+- 本项目统一使用 Conda 环境 `llm-intern`
+- `llm-intern` 使用 Python 3.11
+- 后续所有命令必须先 `conda activate llm-intern`
+- 如果 Codex 或终端不能保持激活状态，可以使用 `conda run -n llm-intern`
+
+实际检查结果：
+
+- conda 是否可用：可用
+- conda 版本：conda 24.11.0
+- llm-intern 环境是否存在：存在，路径为 `/opt/anaconda3/envs/llm-intern`
+- llm-intern Python 版本：Python 3.11.15
+- 当前 python 路径：`/opt/anaconda3/envs/llm-intern/bin/python`
+- 当前 pip 路径：`/opt/anaconda3/envs/llm-intern/bin/pip`
+- 是否误用系统 Python 3.9：没有，依赖安装和验证均使用 `conda run -n llm-intern`
+- PyTorch 是否安装：已安装
+- PyTorch 版本：2.12.0
+- CUDA 是否可用：False
+- MPS 是否可用：False
+- 当前推荐 device：cpu
+- Jupyter kernel 是否注册成功：成功，kernel 名为 `Python (llm-intern)`，安装位置为 `/Users/luoluoluo/Library/Jupyter/kernels/llm-intern`
+
+环境创建和依赖安装记录：
+
+- 首次执行 `conda create -n llm-intern python=3.11 -y` 失败，因为当前 Conda 配置里的 `https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free` 返回 HTTP 403。
+- 未修改全局 Conda 配置，改用 `conda create -n llm-intern python=3.11 -y --override-channels -c defaults` 临时指定官方 `defaults` channel，创建成功。
+- 已执行 `conda run -n llm-intern python -m pip install --upgrade pip`。
+- 已执行 `conda run -n llm-intern python -m pip install -r requirements-day0.txt`。
+- 已执行 `conda run -n llm-intern python -m ipykernel install --user --name llm-intern --display-name "Python (llm-intern)"`。
+
+`conda run -n llm-intern python 00_setup/check_env.py` 输出摘要：
+
+```text
+Python executable: /opt/anaconda3/envs/llm-intern/bin/python
+Python version: 3.11.15
+Python is 3.11.x: True
+Platform: macOS-26.1-arm64-arm-64bit
+CONDA_DEFAULT_ENV: llm-intern
+Running in llm-intern conda environment: True
+PyTorch installed: yes
+PyTorch version: 2.12.0
+CUDA available: False
+CUDA device count: 0
+MPS available: False
+Selected device: cpu
+Tensor a shape: (2, 3)
+Tensor b shape: (3, 4)
+Matmul result shape: (2, 4)
+```
+
+Conda 常用命令：
+
+```bash
+conda info --envs
+conda create -n llm-intern python=3.11 -y
+conda activate llm-intern
+conda deactivate
+conda run -n llm-intern python --version
+conda run -n llm-intern python 00_setup/check_env.py
+conda env export > environment-full.yml
+```

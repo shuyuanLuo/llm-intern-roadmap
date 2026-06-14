@@ -1,0 +1,17 @@
+name: llm-intern
+channels:
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - numpy
+      - pandas
+      - matplotlib
+      - jupyter
+      - ipykernel
+      - tqdm
+      - scikit-learn
+      - torch
+      - torchvision
+      - torchaudio
